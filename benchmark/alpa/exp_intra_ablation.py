@@ -1,6 +1,7 @@
 """Intra-op parallelism ablation study."""
 import argparse
 import time
+import os
 
 import numpy as np
 import ray
@@ -192,10 +193,10 @@ suites = [
     ("gpt", "alpa.heuristic", gpt_heuristic, benchmark_one_case_gpt),
 
     # MoE
-    ("moe", "alpa.auto_sharding", moe_auto_sharding, benchmark_one_case_moe),
-    ("moe", "alpa.data_parallel", moe_data_parallel, benchmark_one_case_moe),
-    ("moe", "alpa.zero_2", moe_zero_2, benchmark_one_case_moe),
-    ("moe", "alpa.zero_3", moe_zero_3, benchmark_one_case_moe),
+    #("moe", "alpa.auto_sharding", moe_auto_sharding, benchmark_one_case_moe),
+    #("moe", "alpa.data_parallel", moe_data_parallel, benchmark_one_case_moe),
+    #("moe", "alpa.zero_2", moe_zero_2, benchmark_one_case_moe),
+    #("moe", "alpa.zero_3", moe_zero_3, benchmark_one_case_moe),
     ("moe", "alpa.heuristic", moe_heuristic, benchmark_one_case_moe), # need to set NCCL_LAUNCH_MODE
 
     # Wide-ResNet
@@ -241,6 +242,10 @@ if __name__ == "__main__":
     for case in cases:
         exp_name, instance, num_hosts, num_devices_per_host, model_name,\
             method, benchmark_func, args = case
+
+        if model_name == "moe" and args[-2] == "shard-largest":
+            os.environ["NCCL_LAUNCH_MODE"] = "PARALLEL"
+            print("Set nccl launch mode")
 
         # Benchmark case
         result = benchmark_func(args, niter, num_hosts, num_devices_per_host)
