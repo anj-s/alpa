@@ -25,7 +25,7 @@ benchmark_one_case_wresnet = (lambda case, niter, num_host, num_devices_per_host
 GB = 1 << 30
 
 gpt_1_spec = [
-    #B,   S,    H     L, #head,     V,    
+    #B,   S,    H     L, #head,     V,
     (8,   1024, 2048, 8, 2048//128, 25600),
     (8,   1024, 3072, 8, 3072//128, 25600),
     (8,   1024, 4096, 8, 4096//128, 25600),
@@ -132,11 +132,11 @@ moe_heuristic = [
 ]
 
 wresnet_1_spec = [
-    #B,   I,   L,  C,   W, dtype,  
-    (32,  224, 50, 160, 2, "fp32"), 
-    (32,  224, 50, 224, 2, "fp32"), 
-    (32,  224, 50, 320, 2, "fp32"), 
-    (32,  224, 50, 448, 2, "fp32"), 
+    #B,   I,   L,  C,   W, dtype,
+    (32,  224, 50, 160, 2, "fp32"),
+    (32,  224, 50, 224, 2, "fp32"),
+    (32,  224, 50, 320, 2, "fp32"),
+    (32,  224, 50, 448, 2, "fp32"),
 ]
 
 wresnet_auto_sharding = [
@@ -256,7 +256,7 @@ if __name__ == "__main__":
         }
 
         # Log results
-        heads = ["Exp", "Instance", "num_hosts", "num_devices_per_host", "model_name", 
+        heads = ["Exp", "Instance", "num_hosts", "num_devices_per_host", "model_name",
                  "method", "value", "tstamp"]
         values = [exp_name, instance, num_hosts, num_devices_per_host,
                   model_name, method, to_str_round(value_dict, 4),
