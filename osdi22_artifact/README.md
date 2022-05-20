@@ -140,8 +140,8 @@ This outputs `intra_ab_wresnet.pdf`, or Figure 9 (c) in the paper.
 
 ### GPT and Wide-ResNet (60 mins)
 ```bash
-python3 gen_data_inter_ab.py --suite gpt.inter_op
-python3 gen_data_inter_ab.py --suite wresnet.inter_op
+python3 gen_data_inter_ab.py --model gpt
+python3 gen_data_inter_ab.py --model wresnet
 python3 plot_inter_ab.py
 ```
 This outputs Figure 10 in the paper.

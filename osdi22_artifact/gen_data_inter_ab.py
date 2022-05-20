@@ -146,7 +146,6 @@ def benchmark_one_suite(suite_name, num_hosts, num_devices_per_host, exp_name,
         else:
             results.append(result)
 
-    for result in results:
         (parameter_count, mem_allocated, max_mem_allocated, latencies,
             tflops, tflops_ckpt, compilation_times, compute_cost_file_name,
             forward_stage_layer_ids, submesh_shapes, logical_mesh_shapes,
@@ -178,7 +177,7 @@ def benchmark_one_suite(suite_name, num_hosts, num_devices_per_host, exp_name,
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--suite",
+    parser.add_argument("--model",
                         choices=list(["gpt", "wresnet"]),
                         type=str,
                         required=True)
@@ -190,9 +189,9 @@ if __name__ == "__main__":
     parser.add_argument("--search", action="store_true")
     args = parser.parse_args()
 
-    output_name = f"results_{args.exp_name}.tsv"
+    output_name = f"results_{args.exp_name}_raw.tsv"
 
-    suite_name = args.suite + ".inter_op"
+    suite_name = args.model + ".inter_op"
     suffix = "search" if args.search else "result"
     suite_full_name = suite_name + "." + suffix
 
