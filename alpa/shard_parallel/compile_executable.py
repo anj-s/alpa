@@ -101,6 +101,9 @@ def shard_parallel_internal(
     """
     # Trace to get jaxpr
     jaxpr, out_avals, consts = pe.trace_to_jaxpr_final(fun, avals)
+    print(f"jaxpr {jaxpr}")
+    print(f"out_avals {out_avals}")
+    print(f"consts {consts}")
 
     # Convert jaxpr to XLA HLO
     name = f"{fun.__name__}_shard_parallel"

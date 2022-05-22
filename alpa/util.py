@@ -336,11 +336,16 @@ def jaxpr_to_hlo_computation(name: str, closed_jaxpr: ClosedJaxpr,
     tuple_args = False
     axis_env = xla.AxisEnv(nreps=1, names=(), sizes=())
     name_stack = xla.new_name_stack(xla.wrap_name(name, 'parallelize'))
+    print("XLA builder")
+    print(f"name {name}")
     c = xc.XlaBuilder(name)
+    print(f"consts {consts}")
     xla_consts = xla._xla_consts(c, consts)
+    print(f"invals {in_avals} backend_name {backend_name} axis_env {axis_env} name_stack {name_stack}")
     xla_args, donated_invars = xla._xla_callable_args(
         c, in_avals, tuple_args, donated_invars=donated_invars)
     ctx = xla.TranslationContext(c, backend_name, axis_env, name_stack)
+    # TODO(anj): we need a converter from LTC for fx_to_hlo
     out_nodes = xla.jaxpr_subcomp(ctx, closed_jaxpr.jaxpr, xla_consts,
                                   *xla_args)
     out_tuple = xc.ops.Tuple(c, out_nodes)

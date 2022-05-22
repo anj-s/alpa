@@ -190,6 +190,7 @@ def run_auto_sharding_pass(
       rewrite_grad_acc_indices: The indices of tensors in output that are gradients.
       memory_budget_per_device: The memory budget per device in bytes.
     """
+    print("TEST")
     # Set compile options
     if memory_budget_per_device is None:
         memory_budget_per_device = -1

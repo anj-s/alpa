@@ -21,8 +21,10 @@ MB = 1024**2
 class AutoShardingBasicTest(unittest.TestCase):
 
     def setUp(self):
-        assert len(jax.local_devices()) >= 4
-        self.devices = jax.local_devices()[:4]
+        #assert len(jax.local_devices()) >= 4
+        assert len(jax.local_devices()) >= 2
+        self.devices = jax.local_devices()[:2]
+        #self.devices = jax.local_devices()[:4]
         self.method = ShardParallel(devices=self.devices)
 
     def test_donate_buffer(self):
@@ -62,15 +64,26 @@ class AutoShardingBasicTest(unittest.TestCase):
         expected = func(a, b)
         actual = p_func(a, b)
         assert_allclose(expected, actual)
-
+    
     def test_one_by_one_mesh(self):
+
         @parallelize(method=ShardParallel(devices=self.devices[0:1]))
         def add_one(x):
             x = x + 1
             return x
 
+
+        def add_one_fx(x):
+            x = x + 1
+            return x
+        
         a = jnp.ones((128, 128))
         b = add_one(a)
+
+        from functorch import make_fx
+        import torch
+        graph = make_fx(add_one_fx)(torch.ones((128, 128)))
+        print(f"graph {graph}")
 
         assert_allclose(b, a + 1)
 
@@ -213,15 +226,15 @@ class AutoShardingBasicTest(unittest.TestCase):
 
 def suite():
     suite = unittest.TestSuite()
-    suite.addTest(AutoShardingBasicTest("test_donate_buffer"))
-    suite.addTest(AutoShardingBasicTest("test_dot_reshape_transpose"))
+    #suite.addTest(AutoShardingBasicTest("test_donate_buffer"))
+    #suite.addTest(AutoShardingBasicTest("test_dot_reshape_transpose"))
     suite.addTest(AutoShardingBasicTest("test_one_by_one_mesh"))
-    suite.addTest(AutoShardingBasicTest("test_gather"))
-    suite.addTest(AutoShardingBasicTest("test_dropout"))
-    suite.addTest(AutoShardingBasicTest("test_reshape_uneven_partition"))
-    suite.addTest(AutoShardingBasicTest("test_argmax"))
-    suite.addTest(AutoShardingBasicTest("test_sort"))
-    suite.addTest(AutoShardingBasicTest("test_fast_call"))
+    #suite.addTest(AutoShardingBasicTest("test_gather"))
+    #suite.addTest(AutoShardingBasicTest("test_dropout"))
+    #suite.addTest(AutoShardingBasicTest("test_reshape_uneven_partition"))
+    #suite.addTest(AutoShardingBasicTest("test_argmax"))
+    #suite.addTest(AutoShardingBasicTest("test_sort"))
+    #suite.addTest(AutoShardingBasicTest("test_fast_call"))
     return suite
 
 
